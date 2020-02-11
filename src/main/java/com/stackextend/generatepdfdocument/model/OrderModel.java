@@ -18,31 +18,19 @@ public class OrderModel {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public Double getTotalPrice() {
-        return getEntries().stream().mapToDouble(entry -> entry.getPrice()).sum();
+        return getEntries().stream().mapToDouble(OrderEntryModel::getPriceTotal).sum();
     }
 
     public Integer getTotalQuantity() {
-        return getEntries().stream().mapToInt(entry -> entry.getQuantity()).sum();
+        return getEntries().stream().mapToInt(OrderEntryModel::getQuantity).sum();
     }
 
     public AddressModel getAddress() {
         return address;
     }
 
-    public void setAddress(AddressModel address) {
-        this.address = address;
-    }
-
     public List<OrderEntryModel> getEntries() {
         return entries;
-    }
-
-    public void setEntries(List<OrderEntryModel> entries) {
-        this.entries = entries;
     }
 }

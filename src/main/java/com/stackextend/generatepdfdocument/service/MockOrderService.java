@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class OrderService {
+public class MockOrderService {
 
     public OrderModel getOrderByCode(final String code) {
 
@@ -24,7 +24,7 @@ public class OrderService {
     private AddressModel address() {
         return new AddressModel("Mouad",
                 "EL Fakir",
-                "Champs-Élysées",
+                "Gabriel Peri",
                 "75000",
                 "Paris",
                 "France");

@@ -9,6 +9,7 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.jasperreports.JasperReportsUtils;
 
@@ -24,53 +25,57 @@ import java.util.Map;
 @Service
 public class InvoiceService {
 
-    Logger log = LogManager.getLogger(InvoiceService.class);
+    private static Logger logger = LogManager.getLogger(InvoiceService.class);
 
-    private static final String logo_path = "/jasper/images/stackextend-logo.png";
-    private final String invoice_template = "/jasper/invoice_template.jrxml";
+    @Value("${invoice.logo.path}")
+    private String logo_path;
 
-    public void generateInvoiceFor(OrderModel order, Locale locale) throws IOException {
+    @Value("${invoice.template.path}")
+    private String invoice_template;
+
+    public File generateInvoiceFor(OrderModel order, Locale locale) throws IOException {
 
         File pdfFile = File.createTempFile("my-invoice", ".pdf");
 
-        log.info(String.format("Invoice pdf path : %s", pdfFile.getAbsolutePath()));
+        logger.info(String.format("Invoice pdf path : %s", pdfFile.getAbsolutePath()));
 
         try(FileOutputStream pos = new FileOutputStream(pdfFile))
         {
-            // Load invoice jrxml template.
+            // Load invoice JRXML template.
             final JasperReport report = loadTemplate();
 
-            // Create parameters map.
+            // Fill parameters map.
             final Map<String, Object> parameters = parameters(order, locale);
 
             // Create an empty datasource.
             final JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(Collections.singletonList("Invoice"));
 
-            // Render as PDF.
+            // Render the invoice as a PDF file.
             JasperReportsUtils.renderAsPdf(report, parameters, dataSource, pos);
 
+            // return file.
+            return pdfFile;
         }
         catch (final Exception e)
         {
-            log.error(String.format("An error occured during PDF creation: %s", e));
+            logger.error(String.format("An error occured during PDF creation: %s", e));
+            throw new RuntimeException(e);
         }
     }
 
-    // Fill template order parametres
+    // Fill template order params
     private Map<String, Object> parameters(OrderModel order, Locale locale) {
         final Map<String, Object> parameters = new HashMap<>();
-
         parameters.put("logo", getClass().getResourceAsStream(logo_path));
         parameters.put("order",  order);
         parameters.put("REPORT_LOCALE", locale);
-
         return parameters;
     }
 
-    // Load invoice jrxml template
+    // Load invoice JRXML template
     private JasperReport loadTemplate() throws JRException {
 
-        log.info(String.format("Invoice template path : %s", invoice_template));
+        logger.info(String.format("Invoice template path : %s", invoice_template));
 
         final InputStream reportInputStream = getClass().getResourceAsStream(invoice_template);
         final JasperDesign jasperDesign = JRXmlLoader.load(reportInputStream);
