@@ -19,7 +19,7 @@ Build-time requirement: JDK 8 or above and Maven 3.2.5 or above.
 
 ## Demo
 
-[![Invoice PDF generator DEMO](ttps://www.stackextend.com/wp-content/uploads/2020/02/invoice-pdf-generator-demo-1.jpg)](https://www.youtube.com/watch?v=H1_sCoRV5QM)
+[![Invoice PDF generator DEMO](https://www.stackextend.com/wp-content/uploads/2020/02/invoice-pdf-generator-demo-1.jpg)](https://www.youtube.com/watch?v=H1_sCoRV5QM)
 
 
 More details on [https://www.stackextend.com](https://www.stackextend.com/java/generate-pdf-document-using-jasperreports-and-spring-boot/).
